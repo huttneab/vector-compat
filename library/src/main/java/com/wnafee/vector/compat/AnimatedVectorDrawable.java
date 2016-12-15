@@ -14,11 +14,6 @@ package com.wnafee.vector.compat;
  * the License.
  */
 
-import com.wnafee.vector.R;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
@@ -40,8 +35,14 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
 
+import com.wnafee.vector.R;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 //TODO: Add support for animator reversal
 public class AnimatedVectorDrawable extends DrawableCompat implements Animatable, Tintable {
@@ -385,6 +386,16 @@ public class AnimatedVectorDrawable extends DrawableCompat implements Animatable
         for (int i = 0; i < size; i++) {
             final Animator animator = animators.get(i);
             if (!animator.isStarted()) {
+                animator.start();
+            }
+        }
+        invalidateSelf();
+    }
+
+    public void startTarget(String targetId) {
+        for (Map.Entry<Animator, String> set : mAnimatedVectorState.mTargetNameMap.entrySet()) {
+            final Animator animator = set.getKey();
+            if (set.getValue().equals(targetId) && !animator.isStarted()) {
                 animator.start();
             }
         }
